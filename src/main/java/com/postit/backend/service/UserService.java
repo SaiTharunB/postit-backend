@@ -43,22 +43,14 @@ public class UserService extends BaseService{
         }
         return user.getToken();
     }
-    public void authenticateUser(String username,String token)
-    {
-        logger.info("authenticating user with name: {}, token: {}",username,token);
-        DbUser user =userRepository.findByNameAndPassword(username,token);
-        if(user==null)
-        {
-            throw new CustomException("user with the credentials does not exist", HttpStatus.NOT_FOUND);
-        }
-    }
 
-    public User updateUser(User user) {
+    public User updateUser(User user,String username,String token) {
         logger.info("in update user");
         Optional<DbUser> dbUser = userRepository.findById(user.getId());
         if(!dbUser.isPresent()){
             throw new CustomException("user not found",HttpStatus.NOT_FOUND);
         }
+        validationService.checkUpdateDeleteAuth(username,token,dbUser.get().getName());
         if(!StringUtils.equalsIgnoreCase(user.getName(),dbUser.get().getName()))
         {
             validationService.checkUserNameisUnique(user.getName());

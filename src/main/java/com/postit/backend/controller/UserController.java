@@ -23,9 +23,9 @@ public class UserController {
         return new ResponseEntity<>(userService.createUser(user),HttpStatus.CREATED);
     }
     @PutMapping
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user)
+    public ResponseEntity<User> updateUser(@Valid @RequestBody User user, @RequestHeader("user") String username,@RequestHeader("token") String token)
     {
-        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUser(user,username,token), HttpStatus.OK);
     }
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@Valid @RequestBody LoginRequest loginRequest)
