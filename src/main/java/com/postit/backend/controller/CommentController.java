@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/comment")
 public class CommentController {
     @Autowired
     CommentService commentService;
