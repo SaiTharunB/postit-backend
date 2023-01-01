@@ -15,4 +15,5 @@ public interface PostRepository extends MongoRepository<PostDto,String> {
 
     @Aggregation({"{$lookup: { from: 'comments', localField: '_id', foreignField: 'postId', as: 'comments' }}" })
     List<Post> getAllPosts(Pageable pageable);
+
 }

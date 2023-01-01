@@ -23,7 +23,7 @@ public class PostService extends BaseService{
     private static Logger logger = LoggerFactory.getLogger(PostService.class);
     @Autowired
     PostRepository postRepository;
-    public Post createPost(PostDto postDto,String user,String token)
+    public PostDto createPost(PostDto postDto,String user,String token)
     {
         logger.info("authenticating user: {}",user);
         validationService.authenticateUser(user,token);
@@ -34,16 +34,16 @@ public class PostService extends BaseService{
         {
             throw new CustomException("failed to create post", HttpStatus.BAD_REQUEST);
         }
-        return modelMapper.map(resp,Post.class);
+        return resp;
     }
 
-    public Page<Post> getAllPosts(Pageable pageable) {
+    public Page<PostDto> getAllPosts(Pageable pageable) {
         logger.info("fetching posts");
         pageable=validationService.validatePageRequest(pageable);
-        long totalCount = postRepository.getAllPostsCount().size();
+        long totalCount = postRepository.findAll().size();
         if(totalCount>0) {
             logger.info("total posts found :: {}",totalCount);
-            List<Post> posts = postRepository.getAllPosts(pageable);
+            List<PostDto> posts = postRepository.findAll(pageable).getContent();
             return new PageImpl<>(posts, pageable, totalCount);
         }
         return new PageImpl<>(Collections.emptyList(), pageable, totalCount);

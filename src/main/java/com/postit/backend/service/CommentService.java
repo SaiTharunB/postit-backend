@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +45,12 @@ public class CommentService extends BaseService{
         }
         validationService.checkUpdateDeleteAuth(user,token,comment.get().getAuthor());
         commentRepository.deleteById(commentId);
+    }
+
+    public List<Comment> getCommentsbyPostId(String postId, String user, String token) {
+        logger.info("fetching comments for post with id :: {}",postId);
+        validationService.validateId(postId);
+        validationService.authenticateUser(user,token);
+        return commentRepository.findByPostId(postId);
     }
 }

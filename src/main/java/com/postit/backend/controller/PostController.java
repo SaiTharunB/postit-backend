@@ -19,12 +19,12 @@ public class PostController {
     @Autowired
     PostService postService;
     @GetMapping
-    public Page<Post> list(Pageable pageable){
+    public Page<PostDto> list(Pageable pageable){
         return postService.getAllPosts(pageable);
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@Valid @RequestBody PostDto post, @RequestHeader("user") String user,@RequestHeader("token") String token)
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto post, @RequestHeader("user") String user,@RequestHeader("token") String token)
     {
         return new ResponseEntity<>(postService.createPost(post,user,token), HttpStatus.CREATED);
     }
