@@ -1,23 +1,10 @@
 package com.postit.backend.models;
 
-import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
-
-@Data
-@Document(collection = "comments")
-public class Comment {
-    @Id
-    private String id;
-    private String comment;
-    private String author;
-    @Field(targetType = FieldType.OBJECT_ID)
-    private String postId;
-    private int likes;
-
-    private LocalDateTime created;
+@Getter
+@Setter
+public class Comment extends CommentDto{
+    private boolean isLiked;
 }

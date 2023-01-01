@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.xml.bind.ValidationException;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -63,5 +65,23 @@ public class ValidationService {
             return PageRequest.of(0, 10, Sort.by("created").descending());
         }
         return pageable;
+    }
+    public void validateLikesRequest(Map<String,String> request)
+    {
+        if(!request.containsKey("id"))
+        {
+            throw new CustomException("id doesn't exist",HttpStatus.BAD_REQUEST);
+        }
+        if(!request.containsKey("operation"))
+        {
+            throw new CustomException("operation doesn't exist",HttpStatus.BAD_REQUEST);
+        }
+        if(StringUtils.isBlank(request.get("id"))){
+            throw new CustomException("id should not be blank or null",HttpStatus.BAD_REQUEST);
+        }
+        if(StringUtils.equalsAnyIgnoreCase(request.get("operation"),"like","unlike"))
+        {
+            throw new CustomException("operation should be like or unlike",HttpStatus.BAD_REQUEST);
+        }
     }
 }

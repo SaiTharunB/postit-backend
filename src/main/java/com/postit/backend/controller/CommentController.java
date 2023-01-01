@@ -1,9 +1,9 @@
 package com.postit.backend.controller;
 
 import com.postit.backend.models.Comment;
+import com.postit.backend.models.CommentDto;
 import com.postit.backend.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +18,12 @@ public class CommentController {
     CommentService commentService;
 
     @GetMapping("/{id}")
-    public List<Comment> getCommentsByPost(@PathVariable("id") String postId, @RequestHeader("username") String user,@RequestHeader("token") String token)
+    public List<Comment> getCommentsByPost(@PathVariable("id") String postId, @RequestHeader("username") String user, @RequestHeader("token") String token)
     {
         return commentService.getCommentsbyPostId(postId,user,token);
     }
     @PostMapping
-    public Comment createComment(@Valid @RequestBody Comment comment, @RequestHeader("username") String user,@RequestHeader("token") String token)
+    public CommentDto createComment(@Valid @RequestBody CommentDto comment, @RequestHeader("username") String user, @RequestHeader("token") String token)
     {
         return commentService.createComment(comment,user,token);
     }

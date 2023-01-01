@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -19,12 +20,12 @@ public class PostController {
     @Autowired
     PostService postService;
     @GetMapping
-    public Page<PostDto> list(Pageable pageable){
-        return postService.getAllPosts(pageable);
+    public Page<Post> list(Pageable pageable, @RequestHeader("user") String user,@RequestHeader("token") String token){
+        return postService.getAllPosts(pageable,user,token);
     }
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto post, @RequestHeader("user") String user,@RequestHeader("token") String token)
+    public ResponseEntity<Post> createPost(@Valid @RequestBody PostDto post, @RequestHeader("user") String user,@RequestHeader("token") String token)
     {
         return new ResponseEntity<>(postService.createPost(post,user,token), HttpStatus.CREATED);
     }
