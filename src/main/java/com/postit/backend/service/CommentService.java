@@ -57,7 +57,7 @@ public class CommentService extends BaseService{
         validationService.validateId(postId);
         validationService.authenticateUser(user,token);
         HashSet<String> set= (HashSet<String>) likeRepository.findByUsernameAndType(user,"comment")
-                .stream().map(dto->dto.getEntityId()).collect(Collectors.toList());
+                .stream().map(dto->dto.getEntityId()).collect(Collectors.toSet());
         return commentRepository.findByPostId(postId)
                 .stream()
                 .map(dto->{
