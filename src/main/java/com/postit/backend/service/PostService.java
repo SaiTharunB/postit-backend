@@ -6,6 +6,7 @@ import com.postit.backend.models.Post;
 import com.postit.backend.models.PostDto;
 import com.postit.backend.repository.CommentRepository;
 import com.postit.backend.repository.PostRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -82,5 +80,23 @@ public class PostService extends BaseService{
             }
             return post;
         }).collect(Collectors.toList());
+    }
+    public PostDto updateLikes(String postId,String opType)
+    {
+        logger.info("Updating likes operation :: {}",opType);
+        Optional<PostDto> resp=postRepository.findById(postId);
+        if(resp.isPresent()) {
+            PostDto postDto = resp.get();
+            if (StringUtils.equalsIgnoreCase(opType, "INC")) {
+                postDto.setLikes(postDto.getLikes()+1);
+            }
+            else{
+                postDto.setLikes(postDto.getLikes()-1);
+            }
+            return postRepository.save(postDto);
+        }
+        else{
+            throw new CustomException("post not found",HttpStatus.BAD_REQUEST);
+        }
     }
 }

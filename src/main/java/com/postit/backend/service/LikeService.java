@@ -2,6 +2,7 @@ package com.postit.backend.service;
 
 import com.postit.backend.models.Like;
 import com.postit.backend.repository.LikeRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,12 @@ public class LikeService extends BaseService{
 
     @Autowired
     LikeRepository likeRepository;
+
+    @Autowired
+    PostService postService;
+
+    @Autowired
+    CommentService commentService;
     public void saveLike(String id,String type, String user,String token)
     {
         Like like=new Like(user,type,id);
@@ -24,10 +31,24 @@ public class LikeService extends BaseService{
         {
             logger.info("disLike saved");
             likeRepository.deleteById(dbLike.getId());
+            if(StringUtils.equalsIgnoreCase(type,"post"))
+            {
+                postService.updateLikes(id,"DEC");
+            }
+            else{
+                commentService.updateLikes(id,"DEC");
+            }
         }
         else {
             logger.info("like saved");
             likeRepository.save(like);
+            if(StringUtils.equalsIgnoreCase(type,"post"))
+            {
+                postService.updateLikes(id,"INC");
+            }
+            else{
+                commentService.updateLikes(id,"INC");
+            }
         }
     }
 }

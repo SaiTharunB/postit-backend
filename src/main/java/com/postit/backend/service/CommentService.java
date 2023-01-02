@@ -4,7 +4,9 @@ import com.postit.backend.exception.CustomException;
 import com.postit.backend.models.Comment;
 import com.postit.backend.models.CommentDto;
 import com.postit.backend.models.Like;
+import com.postit.backend.models.PostDto;
 import com.postit.backend.repository.CommentRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +68,24 @@ public class CommentService extends BaseService{
                     }
                     return comment;
                 }).collect(Collectors.toList());
+    }
+
+    public CommentDto updateLikes(String commentId, String opType)
+    {
+        logger.info("Updating likes operation :: {}",opType);
+        Optional<CommentDto> resp=commentRepository.findById(commentId);
+        if(resp.isPresent()) {
+            CommentDto commentDto = resp.get();
+            if (StringUtils.equalsIgnoreCase(opType, "INC")) {
+                commentDto.setLikes(commentDto.getLikes()+1);
+            }
+            else{
+                commentDto.setLikes(commentDto.getLikes()-1);
+            }
+            return commentRepository.save(commentDto);
+        }
+        else{
+            throw new CustomException("comment not found",HttpStatus.BAD_REQUEST);
+        }
     }
 }
