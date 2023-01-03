@@ -14,4 +14,6 @@ public interface PostRepository extends MongoRepository<PostDto,String> {
 //    })
 //    List<Post> getAllPosts(Pageable pageable);
 
+    List<PostDto> findByAuthor(String name);
+
 }

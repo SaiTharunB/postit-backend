@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -28,5 +29,11 @@ public class PostController {
     public ResponseEntity<Post> createPost(@Valid @RequestBody PostDto post, @RequestHeader("user") String user,@RequestHeader("token") String token)
     {
         return new ResponseEntity<>(postService.createPost(post,user,token), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<Post>> getUserPosts(@RequestHeader("user") String user,@RequestHeader("token") String token)
+    {
+        return new ResponseEntity<>(postService.getUserPosts(user,token),HttpStatus.OK);
     }
 }

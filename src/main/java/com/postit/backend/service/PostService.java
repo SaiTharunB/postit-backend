@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -98,5 +99,15 @@ public class PostService extends BaseService{
         else{
             throw new CustomException("post not found",HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public List<Post> getUserPosts(String user, String token) {
+        logger.info("Fetching posts of :: {}",user);
+        validationService.authenticateUser(user,token);
+        List<PostDto> postDtos = postRepository.findByAuthor(user);
+        if (!CollectionUtils.isEmpty(postDtos)){
+            return populateComments(postDtos,user);
+        }
+        return Collections.emptyList();
     }
 }
